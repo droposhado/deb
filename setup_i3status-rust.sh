@@ -28,7 +28,8 @@ cargo build --release --all-features --all-targets --verbose
 
 # Tests whether the final executable is working or has a build
 # error before packaging
-"target/release/${NAME}" --version
+# Target needs be manual, because use rs and not rust on name
+target/release/i3status-rs --version
 
 fpm -s dir -t "$PKG_TYPE" --name "$NAME" --version "$VERSION" \
     --architecture "$PKG_ARCH" --license "GPL-3.0" \
