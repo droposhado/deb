@@ -19,9 +19,9 @@ tar xzf "${NAME}-${VERSION}.tar.gz" -C "${NAME}-${VERSION}" --strip-components 1
 
 cd "${NAME}-${VERSION}" || exit 1
 
-sudo apt-get install build-essential libssl-dev libdbus-1-dev \
+sudo apt-get install -y build-essential libssl-dev libdbus-1-dev \
     libnotmuch-dev libpulse-dev libgoogle-perftools-dev \
-    libsensors-dev and libssl-dev
+    libsensors-dev and libssl-dev --no-install-recommends
 
 cargo test --all-features --all-targets --verbose
 
