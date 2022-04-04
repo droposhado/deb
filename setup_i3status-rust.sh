@@ -9,7 +9,12 @@ tar xzf "${NAME}-${VERSION}.tar.gz"
 
 # Extraction create i3status-rust-$VERSION folder, but needs be "${NAME}-${VERSION}"
 # This command normalize
-mkdir "${NAME}-${VERSION}"
+
+if [[ ! -d "${NAME}-${VERSION}" ]]; then
+  mkdir "${NAME}-${VERSION}"
+fi
+
+
 tar xzf "${NAME}-${VERSION}.tar.gz" -C "${NAME}-${VERSION}" --strip-components 1
 
 cd "${NAME}-${VERSION}" || exit 1
