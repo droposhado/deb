@@ -20,7 +20,8 @@ tar xzf "${NAME}-${VERSION}.tar.gz" -C "${NAME}-${VERSION}" --strip-components 1
 cd "${NAME}-${VERSION}" || exit 1
 
 sudo apt-get install build-essential libssl-dev libdbus-1-dev \
-    libnotmuch-dev libpulse-dev libgoogle-perftools-dev
+    libnotmuch-dev libpulse-dev libgoogle-perftools-dev \
+    libsensors-dev and libssl-dev
 
 cargo test --all-features --all-targets --verbose
 
@@ -34,7 +35,7 @@ target/release/i3status-rs --version
 fpm -s dir -t "$PKG_TYPE" --name "$NAME" --version "$VERSION" \
     --architecture "$PKG_ARCH" --license "GPL-3.0" \
     --description "Very resourcefriendly and feature-rich replacement for i3status, written in pure Rust" \
-    -d "libnotmuch5" -d "libgoogle-perftools4" \
+    -d "libnotmuch5" -d "libsensors5" -d "libgoogle-perftools4" \
     --deb-no-default-config-files \
     files/=/usr/share/i3status-rust/ \
     target/release/i3status-rs=/usr/bin/i3status-rs
