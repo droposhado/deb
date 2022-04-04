@@ -3,7 +3,7 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-curl -sSL "https://github.com/zricethezav/gitleaks/releases/download/v${VERSION}/gitleaks-${VERSION}-linux_x64.tar.gz" -o "${NAME}-${VERSION}.tar.gz"
+curl -sSL "https://github.com/zricethezav/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" -o "${NAME}-${VERSION}.tar.gz"
 
 tar xzf "${NAME}-${VERSION}.tar.gz"
 
