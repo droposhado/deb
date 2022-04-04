@@ -1,0 +1,112 @@
+on: 
+  push: 
+    branches: main
+  
+  pull_request:
+
+name: "Package"
+
+jobs:
+
+  lint: 
+    name: "Lint shell script"
+    runs-on: ubuntu-latest
+    steps: 
+      - name: "Update package index"
+        run: "sudo apt-get update"
+        
+      - name: "Install APT dependencies"
+        run: "sudo apt-get install curl shellcheck"
+
+      - name: "checkout repo"
+        uses: actions/checkout@v2
+
+      - name: "Linting shell script files"
+        run: "shellcheck *.sh"
+
+      - uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          title: ${{ github.repository }} ( ${{  github.job }}  )
+          noprefix: true
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+
+  deploy: 
+    name: "Build and upload"
+    runs-on: ubuntu-18.04
+    continue-on-error: true
+
+    env:
+      FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
+      FURY_USERNAME: ${{ secrets.FURY_USERNAME }}
+
+    strategy: 
+      matrix: 
+        name: 
+          - alacritty
+          - espanso
+          - gitleaks
+          - i3status-rust
+          - ly
+
+        include: 
+          - name: alacritty
+            pkg_arch: amd64
+            pkg_type: deb
+            version: "0.9.0"
+            cmd: "alacritty --version"
+
+          - name: espanso
+            pkg_arch: amd64
+            pkg_type: deb
+            version: "0.7.3"
+            cmd: "espanso --version"
+
+          - name: gitleaks
+            pkg_arch: amd64
+            pkg_type: deb
+            version: "8.2.2"
+            cmd: "gitleaks --version"
+
+          - name: i3status-rust
+            pkg_arch: amd64
+            pkg_type: deb
+            version: "0.20.5"
+            cmd: "i3status-rs --version"
+
+          - name: ly
+            pkg_arch: amd64
+            pkg_type: deb
+            version: "0.5.3"
+            cmd: "ly -v &"
+
+    steps: 
+      - name: "Update package index"
+        run: "sudo apt-get update"
+  
+      - name: "Install FPM"
+        run: "sudo gem install --no-document fpm"
+      
+      - name: "checkout repo"
+        uses: actions/checkout@v2
+      
+      - name: "Setup ${{matrix.name}}"
+        run: "bash setup_${{matrix.name}}.sh"
+        env:
+          NAME: ${{matrix.name}}
+          PKG_ARCH: ${{matrix.pkg_arch}}
+          PKG_TYPE: ${{matrix.pkg_type}}
+          VERSION: ${{matrix.version}}
+      
+      - name: "Install generated package"
+        run: "sudo apt install ./${{matrix.name}}_${{matrix.version}}_${{matrix.pkg_arch}}.deb"
+      
+      - name: "List package content"
+        run: "dpkg -c ${{matrix.name}}_${{matrix.version}}_${{matrix.pkg_arch}}.deb"
+      
+      - name: "Check installed package version or test command"
+        run: "${{matrix.cmd}}"
+      
+      - name: "Deploy package to Gemfury"
+        if: ${{ github.event_name == 'push' }}
+        run: "curl -F package=@${{matrix.name}}_${{matrix.version}}_${{matrix.pkg_arch}}.deb https://${FURY_TOKEN}@push.fury.io/${FURY_USERNAME}/"

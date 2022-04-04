@@ -1,0 +1,53 @@
+os: linux
+
+# Dependency control:
+# Alacritty needs GLIB_C version, for use in Debian Buster and Ubuntu, needs
+# needs be Ubuntu Bionic (GLIB_C 2.28), where Buster uses 2.27
+# Ubuntu Focal have 2.29
+dist: bionic
+
+language: ruby
+
+addons:
+  apt:
+    - curl
+    - shellcheck
+
+env:
+
+  # The variables are stored here and not in the setup_*.sh file,
+  # because you can expand the matrix to rpm and arm in a simpler way,
+  # using a single script to packaging file
+  # Prefix VERSION tags is v as v0.7.2
+
+  - NAME=alacritty
+    VERSION=0.8.0
+    PKG_ARCH=amd64
+    PKG_TYPE=deb
+
+  - NAME=espanso
+    VERSION=0.7.3
+    PKG_ARCH=amd64
+    PKG_TYPE=deb
+
+  - NAME=gitleaks
+    VERSION=7.5.0
+    PKG_ARCH=amd64
+    PKG_TYPE=deb
+
+install:
+  - gem install --no-document fpm
+
+script:
+  - shellcheck *.sh
+  - bash setup_${NAME}.sh
+  - sudo apt install ./${NAME}_${VERSION}_${PKG_ARCH}.deb
+  - dpkg -c ${NAME}_${VERSION}_${PKG_ARCH}.deb
+  - ${NAME} --version
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: curl -F package=@${NAME}_${VERSION}_${PKG_ARCH}.deb https://$FURY_TOKEN@push.fury.io/$FURY_USERNAME/
+  on:
+    branch: main
