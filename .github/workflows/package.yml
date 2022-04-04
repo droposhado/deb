@@ -8,13 +8,13 @@ name: "Package"
 
 jobs:
 
-  lint: 
+  lint:
     name: "Lint shell script"
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - name: "Update package index"
         run: "sudo apt-get update"
-        
+
       - name: "Install APT dependencies"
         run: "sudo apt-get install curl shellcheck"
 
@@ -24,7 +24,7 @@ jobs:
       - name: "Linting shell script files"
         run: "shellcheck *.sh"
 
-  deploy: 
+  deploy:
     name: "Build and upload"
     runs-on: ubuntu-18.04
     continue-on-error: true
@@ -33,16 +33,16 @@ jobs:
       FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
       FURY_USERNAME: ${{ secrets.FURY_USERNAME }}
 
-    strategy: 
-      matrix: 
-        name: 
+    strategy:
+      matrix:
+        name:
           - alacritty
           - espanso
           - gitleaks
           - i3status-rust
           - ly
 
-        include: 
+        include:
           - name: alacritty
             pkg_arch: amd64
             pkg_type: deb
@@ -73,16 +73,16 @@ jobs:
             version: "0.5.3"
             cmd: "ly -v &"
 
-    steps: 
+    steps:
       - name: "Update package index"
         run: "sudo apt-get update"
-  
+
       - name: "Install FPM"
         run: "sudo gem install --no-document fpm"
-      
+
       - name: "checkout repo"
         uses: actions/checkout@v2
-      
+
       - name: "Setup ${{matrix.name}}"
         run: "bash setup_${{matrix.name}}.sh"
         env:
@@ -90,16 +90,16 @@ jobs:
           PKG_ARCH: ${{matrix.pkg_arch}}
           PKG_TYPE: ${{matrix.pkg_type}}
           VERSION: ${{matrix.version}}
-      
+
       - name: "Install generated package"
         run: "sudo apt install ./${{matrix.name}}_${{matrix.version}}_${{matrix.pkg_arch}}.deb"
-      
+
       - name: "List package content"
         run: "dpkg -c ${{matrix.name}}_${{matrix.version}}_${{matrix.pkg_arch}}.deb"
-      
+
       - name: "Check installed package version or test command"
         run: "${{matrix.cmd}}"
-      
+
       - name: "Deploy package to Gemfury"
         if: ${{ github.event_name == 'push' }}
         run: "curl -F package=@${{matrix.name}}_${{matrix.version}}_${{matrix.pkg_arch}}.deb https://${FURY_TOKEN}@push.fury.io/${FURY_USERNAME}/"
