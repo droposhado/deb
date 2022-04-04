@@ -71,7 +71,7 @@ jobs:
           - name: i3status-rust
             pkg_arch: amd64
             pkg_type: deb
-            version: "0.20.5"
+            version: "0.20.6"
             cmd: "i3status-rs --version"
 
           - name: ly
