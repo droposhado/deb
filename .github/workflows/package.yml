@@ -58,7 +58,7 @@ jobs:
           - name: gitleaks
             pkg_arch: amd64
             pkg_type: deb
-            version: "8.2.3"
+            version: "8.2.4"
             cmd: "gitleaks version"
 
           - name: i3status-rust
