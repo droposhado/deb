@@ -7,10 +7,10 @@ Especially designed to be compiled and packaged in CI.
 Add a `/etc/apt/sources.list.d/droposhado.list` with:
 
 ```
-deb [trusted=yes] https://packages.droposhado.org/apt /
+deb [trusted=yes] https://deb.droposhado.org/ /
 ```
 
-Or
+Or original url provide by [Gemfury](https://gemfury.com/):
 
 ```
 deb [trusted=yes] https://apt.fury.io/droposhado/ /
