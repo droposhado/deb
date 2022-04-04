@@ -37,7 +37,7 @@ fpm -s dir -t "$PKG_TYPE" --name "$NAME" --version "$VERSION" \
     -d "libnotmuch5" -d "libgoogle-perftools4" \
     --deb-no-default-config-files \
     files/=/usr/share/i3status-rust/ \
-    target/release/"$NAME"=/usr/bin/"$NAME"
+    target/release/i3status-rs=/usr/bin/i3status-rs
 
 # Move to default location
 mv "${NAME}_${VERSION}_${PKG_ARCH}.deb" ..
