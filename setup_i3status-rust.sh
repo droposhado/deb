@@ -21,7 +21,7 @@ cd "${NAME}-${VERSION}" || exit 1
 
 sudo apt-get install -y build-essential libssl-dev libdbus-1-dev \
     libnotmuch-dev libpulse-dev libgoogle-perftools-dev \
-    libsensors-dev and libssl-dev --no-install-recommends
+    libsensors-dev libssl-dev --no-install-recommends
 
 cargo test --all-features --all-targets --verbose
 
