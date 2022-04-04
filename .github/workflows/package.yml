@@ -24,13 +24,6 @@ jobs:
       - name: "Linting shell script files"
         run: "shellcheck *.sh"
 
-      - uses: sarisia/actions-status-discord@v1
-        if: always()
-        with:
-          title: ${{ github.repository }} ( ${{  github.job }}  )
-          noprefix: true
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-
   deploy: 
     name: "Build and upload"
     runs-on: ubuntu-18.04
