@@ -25,7 +25,7 @@ sudo apt-get install -y build-essential libssl-dev libdbus-1-dev \
 
 cargo test --all-features --all-targets --verbose
 
-cargo build --release --all-features --all-targets --verbose
+cargo build --release --all-targets --verbose
 
 # Tests whether the final executable is working or has a build
 # error before packaging
