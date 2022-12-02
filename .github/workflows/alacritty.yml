@@ -1,0 +1,26 @@
+name: "alacritty"
+
+on: 
+  push: 
+    branches:
+      - main
+
+    paths:
+      - '.github/workflows/alacritty.yml'
+      - '.github/workflows/package.yml'
+      - 'alacritty/**'
+      - 'deploy.sh'
+
+jobs:
+
+  packaging:
+    name: "packaging"
+    uses: ./.github/workflows/package.yml
+    with:
+      name: "alacritty"
+      cmd: "alacritty --version"
+      arch: "amd64"
+      version: "0.11.0"
+
+    secrets: inherit
+

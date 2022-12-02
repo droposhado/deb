@@ -1,0 +1,74 @@
+name: "Package"
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+
+      arch:
+        required: true
+        type: string
+
+      version:
+        required: true
+        type: string
+
+      cmd:
+        required: true
+        type: string
+
+      os:
+        default: 'ubuntu-latest'
+        type: string
+
+    secrets:
+      fury_token:
+        required: true
+
+      fury_username:
+        required: true
+
+jobs:
+
+  deploy:
+    name: Build and upload
+    runs-on: ${{ inputs.os }}
+
+    env:
+      FURY_TOKEN: ${{ secrets.fury_token }}
+      FURY_USERNAME: ${{ secrets.fury_token }}
+
+    steps:
+      - name: Update package index
+        run: sudo apt-get update
+
+      - name: Install FPM
+        run: sudo gem install --no-document fpm
+
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup ${{ inputs.name }}
+        run: bash ${{ inputs.name }}/setup.sh
+        env:
+          NAME: ${{ inputs.name }}
+          PKG_ARCH: ${{ inputs.arch }}
+          VERSION: ${{ inputs.version }}
+
+      - name: Install generated package
+        run: sudo apt install ./${{ inputs.name}}_${{ inputs.version}}_${{ inputs.arch}}.deb
+
+      - name: List package content
+        run: dpkg -c ${{ inputs.name }}_${{ inputs.version }}_${{ inputs.arch }}.deb
+
+      - name: Check installed package version or test command
+        run: ${{ inputs.cmd }}
+
+      - name: Deploy package to Gemfury
+        if: ${{ github.event_name == 'push' }}
+        run: bash deploy.sh
+        env:
+          NAME: ${{ inputs.name }}
+          PKG_ARCH: ${{ inputs.arch }}
+          VERSION: ${{ inputs.version }}

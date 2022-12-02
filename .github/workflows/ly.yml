@@ -1,0 +1,26 @@
+name: "ly"
+
+on: 
+  push: 
+    branches:
+      - main
+
+    paths:
+      - '.github/workflows/ly.yml'
+      - '.github/workflows/package.yml'
+      - 'ly/**'
+      - 'deploy.sh'
+
+jobs:
+
+  packaging:
+    name: "packaging"
+    uses: ./.github/workflows/package.yml
+    with:
+      name: "ly"
+      cmd: "ly -v &"
+      arch: "amd64"
+      version: "0.5.3"
+
+    secrets: inherit
+

@@ -1,0 +1,30 @@
+on: 
+  push: 
+    branches:
+      - main
+      - dev
+
+  pull_request:
+
+name: "Lint"
+
+jobs:
+
+  lint:
+    name: "Lint shell script"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Update package index"
+        run: "sudo apt-get update"
+
+      - name: "Install APT dependencies"
+        run: "sudo apt-get install curl shellcheck"
+
+      - name: "checkout repo"
+        uses: actions/checkout@v2
+
+      - name: "Linting shell script files"
+        run: |
+          shellcheck *.sh
+          shellcheck */*.sh
+

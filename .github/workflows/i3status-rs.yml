@@ -1,0 +1,29 @@
+name: "i3status-rs"
+
+on: 
+  push: 
+    branches:
+      - main
+
+    paths:
+      - '.github/workflows/i3status-rs.yml'
+      - '.github/workflows/package.yml'
+      - 'i3status-rs/**'
+      - 'deploy.sh'
+
+  workflow_dispatch:
+
+jobs:
+
+  packaging:
+    name: "packaging"
+    uses: ./.github/workflows/package.yml
+    with:
+      name: "i3status-rs"
+      cmd: "i3status-rs --version"
+      arch: "amd64"
+      version: "0.22.0"
+      os: "ubuntu-20.04"
+
+    secrets: inherit
+
