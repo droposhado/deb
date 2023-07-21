@@ -1,4 +1,4 @@
-name: "i3status-rs"
+name: "i3status-rust"
 
 on: 
   push: 
@@ -6,9 +6,9 @@ on:
       - main
 
     paths:
-      - '.github/workflows/i3status-rs.yml'
+      - '.github/workflows/i3status-rust.yml'
       - '.github/workflows/package.yml'
-      - 'i3status-rs/**'
+      - 'i3status-rust/**'
       - 'deploy.sh'
 
   workflow_dispatch:
@@ -19,7 +19,7 @@ jobs:
     name: "packaging"
     uses: ./.github/workflows/package.yml
     with:
-      name: "i3status-rs"
+      name: "i3status-rust"
       cmd: "i3status-rs --version"
       arch: "amd64"
       version: "0.31.6"
