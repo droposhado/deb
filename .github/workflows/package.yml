@@ -37,7 +37,7 @@ jobs:
 
     env:
       FURY_TOKEN: ${{ secrets.fury_token }}
-      FURY_USERNAME: ${{ secrets.fury_token }}
+      FURY_USERNAME: ${{ secrets.fury_username }}
 
     steps:
       - name: Update package index
