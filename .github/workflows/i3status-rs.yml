@@ -22,7 +22,7 @@ jobs:
       name: "i3status-rs"
       cmd: "i3status-rs --version"
       arch: "amd64"
-      version: "0.31.7"
+      version: "0.31.6"
       os: "ubuntu-20.04"
 
     secrets: inherit
