@@ -20,7 +20,7 @@ jobs:
       name: "alacritty"
       cmd: "alacritty --version"
       arch: "amd64"
-      version: "0.11.0"
+      version: "0.12.2"
 
     secrets: inherit
 
